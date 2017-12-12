@@ -3,10 +3,18 @@ let timer = 20;
 let gameState = "title"
 let score = 15;
 var bubblePopSound = new Audio("pop.mp3"); 	
+let sprite;
+let ship;
+
+function preload() {
+	sprite = loadImage("https://cdn.glitch.com/d48bf140-5a31-4810-af2f-6ef9ae85f5c3%2F2363425d573122e2d4378a8181aca37a.png?1513103072452");
+	
+}
 
 function setup() { // built-in P5.JS function -=- this runs once
 	createCanvas(700, 800);
 	setInterval(time, 1000);
+	ship = new Hero(10, 10, 0, 0);
 for(let i = 0; i<30; i++) {
 	let x = random(width);
 	let y = random(height);
@@ -40,6 +48,7 @@ winOrLose();
 	timeAndScore();
 	}
 }
+ship.show();
 
 function timeAndScore() {
 	textSize(32);	
@@ -97,11 +106,14 @@ class Bubble{
 }
 
 class Hero {
-	constructor(_x, _y) {
-		this._x = _x;
-		this._y = _y;
+	constructor(x, y) {
+		this.x = x;
+		this.y = y;
 	}
 	
+	show() {
+		image(spirte, ship.x, ship,y, 25, 25);
+	}
 }
 
 function showTitleScreen() {
