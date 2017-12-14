@@ -1,4 +1,4 @@
-let bubbles= [];
+var bubbles= [];
 let timer = 20;
 let gameState = "title"
 let score = 15;
@@ -14,8 +14,8 @@ function preload() {
 function setup() { // built-in P5.JS function -=- this runs once
 	createCanvas(700, 800);
 	setInterval(time, 1000);
-	ship = new Hero(10, 10, 0, 0);
-for(let i = 0; i<30; i++) {
+	ship = new Hero(width/2, 700, 0, 0);
+for(let i = 0; i<20; i++) {
 	let x = random(width);
 	let y = random(height);
 	let r = random(10, 50);
@@ -27,8 +27,27 @@ for(let i = 0; i<30; i++) {
 }
 
 function draw() { 
-background(0);
-winOrLose();
+	background(0);
+	ship.show();
+	ship.move();
+	winOrLose();
+	gameStateFunction();
+	for(let i = bubbles.length-1; i >= 0; i--) {
+		bubbles[i].move();
+		bubbles[i].show();
+		if(bubbles[i].contains(ship.x, ship.y)) {
+			console.log(bubbles.length);
+			bubbles.splice(i, 1);
+			bubblePopSound.play();
+			score--;
+		}
+	}		
+		
+	
+}
+	
+
+function gameStateFunction() {
 	if(gameState=="title") {
 		showTitleScreen();
 	} else if(gameState=="lose") {
@@ -36,19 +55,9 @@ winOrLose();
 	} else if(gameState=="win") {
 		showWinScreen();
 	}else{
-	for(let i = 0; i < bubbles.length; i++) {
-		if(bubbles[i].contains(mouseX, mouseY)) {
-			bubbles.splice(i, 1);
-			bubblePopSound.play();
-			score--;
-		}
-		bubbles[i].move();
-		bubbles[i].show();
-	}
 	timeAndScore();
 	}
 }
-ship.show();
 
 function timeAndScore() {
 	textSize(32);	
@@ -68,15 +77,15 @@ class Bubble{
 	changeColor(bright) {
 		this.brightness = bright;
 	}
-
-	contains(px, py) {
-		let d = dist(px, py, this.x, this.y);
-		if(d < this.r) {
+	contains(givenX, givenY) {
+		let d = dist(this.x, this.y, givenX, givenY);
+		if(d < 25) {
 			return true;
 		}else {
 			return false;
 		}
 	}
+	
 	
 	move() {
 		this.x = this.x + (0);
@@ -112,8 +121,26 @@ class Hero {
 	}
 	
 	show() {
-		image(spirte, ship.x, ship,y, 25, 25);
+		image(sprite, ship.x, ship.y, 50, 50);
+		ellipse(this.x, this.y, 5, 5);//draw an ellipse/circle
 	}
+	
+	move() {
+		if(keyIsDown(LEFT_ARROW)) {
+			this.x -= 5;
+		}
+		if(keyIsDown(RIGHT_ARROW)) {
+			this.x += 5;
+		}
+		if(keyIsDown(UP_ARROW)) {
+			this.y -= 5;
+		}
+		if(keyIsDown(DOWN_ARROW)) {
+			this.y += 5;
+		}
+	}
+	
+	
 }
 
 function showTitleScreen() {
